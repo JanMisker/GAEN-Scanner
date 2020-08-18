@@ -9,7 +9,8 @@
   <script>
 let cells = new Map();
 let rpiMap = new Map();
-
+let rssiMap = new Map();
+	  
 function dataViewToHex(dataView) {
 	const hexString = [...new Uint8Array(dataView.buffer)].map(b => {
     	return b.toString(16).padStart(2, '0');
@@ -28,17 +29,20 @@ function startScan() {
 				const tdId = document.createElement('td');
 				tdId.innerText = deviceId;
 				tr.appendChild(tdId);
-				const tdAdv = document.createElement('td');
-				tdAdv.innerText = deviceId;
-				tr.appendChild(tdAdv);
-				cells.set(deviceId, tdAdv);
+				const tdRpi = document.createElement('td');
+				tr.appendChild(tdRpi);
+				const tdRssi = document.createElement('td');
+				tr.appendChild(tdRssi);
+				cells.set(deviceId, { name: tdId, rssi: tdRssi, rpi: tdRpi} );
 				document.getElementById('output').appendChild(tr);
 				rpiMap.set(deviceId, new Set())
 			}
 			const rpis = rpiMap.get(deviceId);
 			rpis.add(advData);
 			const cell = cells.get(deviceId);
-			cell.innerText = [...rpis].reduce((res,v) => `${res}\n${v}`);
+			cell.rpi.innerText = [...rpis].reduce((res,v) => `${res}\n${v}`);
+			cell.name.innerText = evt.device.name ? evt.device.name : deviceId;
+			cell.rssi.innerText = evt.rssi;
 		});
 	});
 	// const scan = navigator.bluetooth.requestLEScan({acceptAllAdvertisements: true});
@@ -54,7 +58,7 @@ function startScan() {
 <p><strong>Note:</strong> You must be using Chrome 79+ with the chrome://flags/#enable-experimental-web-platform-features flag enabled to try this out.</p>
 <button onclick="startScan()" id="scanButton">Start scanning</button>
 <table id="output">
-<thead><tr><th>deviceId</th><th>discovered proximity IDs</th></thead>
+	<thead><tr><th>device ID or name</th><th>rssi</th><th>discovered proximity IDs</th></thead>
 </table>
 </body>
 </html>
