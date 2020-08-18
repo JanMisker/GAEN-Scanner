@@ -15,7 +15,7 @@ function dataViewToHex(dataView) {
 }
 
 function startScan() {
-	console.log('Start scan');
+	document.getElementById('scanButton').disabled = true;
 	navigator.bluetooth.addEventListener('advertisementreceived', evt => {
 		const deviceId = evt.device.id;
 		evt.serviceData.forEach((dataView, key) => {
@@ -48,8 +48,8 @@ function startScan() {
 <h1>Simple GAEN Scanner</h1>
 <p>This page uses the Web Bluetooth API to scan for the GAEN advertisement packets, containing a rolling proximity identifier.</p>
 <p><strong>Note:</strong> You must be using Chrome 79+ with the chrome://flags/#enable-experimental-web-platform-features flag enabled.</p>
-<button onclick="startScanning()" id="scanButton">Start scanning</button>
-<table id="outputTable">
+<button onclick="startScan()" id="scanButton">Start scanning</button>
+<table id="output">
 <thead><tr><th>deviceId</th><th>discovered proximity IDs</th></thead>
 </table>
 </body>
