@@ -29,10 +29,10 @@ function startScan() {
 				const tdId = document.createElement('td');
 				tdId.innerText = deviceId;
 				tr.appendChild(tdId);
-				const tdRpi = document.createElement('td');
-				tr.appendChild(tdRpi);
 				const tdRssi = document.createElement('td');
 				tr.appendChild(tdRssi);
+				const tdRpi = document.createElement('td');
+				tr.appendChild(tdRpi);
 				cells.set(deviceId, { name: tdId, rssi: tdRssi, rpi: tdRpi} );
 				document.getElementById('output').appendChild(tr);
 				rpiMap.set(deviceId, new Set())
