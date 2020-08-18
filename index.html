@@ -1,0 +1,56 @@
+<html>
+<head>
+  <title>GAEN scanner</title>
+  <style type="text/css">
+  </style>
+  <script>
+let cells = new Map();
+let rpiMap = new Map();
+
+function dataViewToHex(dataView) {
+	const hexString = [...new Uint8Array(dataView.buffer)].map(b => {
+    	return b.toString(16).padStart(2, '0');
+  	}).join(' ');
+	return hexString;
+}
+
+function startScan() {
+	console.log('Start scan');
+	navigator.bluetooth.addEventListener('advertisementreceived', evt => {
+		const deviceId = evt.device.id;
+		evt.serviceData.forEach((dataView, key) => {
+			const advData = dataViewToHex(dataView);
+			if (!cells.has(deviceId)) {
+				const tr = document.createElement('tr');
+				const tdId = document.createElement('td');
+				tdId.innerText = deviceId;
+				tr.appendChild(tdId);
+				const tdAdv = document.createElement('td');
+				tdAdv.innerText = deviceId;
+				tr.appendChild(tdAdv);
+				cells.set(deviceId, tdAdv);
+				document.getElementById('output').appendChild(tr);
+				rpiMap.set(deviceId, new Set())
+			}
+			const rpis = rpiMap.get(deviceId);
+			rpis.add(advData);
+			const cell = cells.get(deviceId);
+			cell.innerText = [...rpis].reduce((res,v) => `${res}\n${v}`);
+		});
+	});
+	// const scan = navigator.bluetooth.requestLEScan({acceptAllAdvertisements: true});
+	const scan = navigator.bluetooth.requestLEScan({ filters: [{ services: [0xfd6f] }] });
+}
+
+  </script>
+</head>
+<body>
+<h1>Simple GAEN Scanner</h1>
+<p>This page uses the Web Bluetooth API to scan for the GAEN advertisement packets, containing a rolling proximity identifier.</p>
+<p><strong>Note:</strong> You must be using Chrome 79+ with the chrome://flags/#enable-experimental-web-platform-features flag enabled.</p>
+<button onclick="startScanning()" id="scanButton">Start scanning</button>
+<table id="outputTable">
+<thead><tr><th>deviceId</th><th>discovered proximity IDs</th></thead>
+</table>
+</body>
+</html>
