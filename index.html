@@ -2,6 +2,9 @@
 <head>
   <title>GAEN scanner</title>
   <style type="text/css">
+	  body {
+		  font-family: monospace;
+	  }
   </style>
   <script>
 let cells = new Map();
@@ -46,8 +49,9 @@ function startScan() {
 </head>
 <body>
 <h1>Simple GAEN Scanner</h1>
-<p>This page uses the Web Bluetooth API to scan for the GAEN advertisement packets, containing a rolling proximity identifier.</p>
-<p><strong>Note:</strong> You must be using Chrome 79+ with the chrome://flags/#enable-experimental-web-platform-features flag enabled.</p>
+<p>This page uses the Web Bluetooth API to scan for the GAEN BLE advertisement packets, containing a rolling proximity identifier. 
+	I used the bluetooth specs pdf from this site: <a href="https://www.apple.com/covid19/contacttracing">Google Apple Exposure Notification Framework</a>.</p><p>Basically a Bluetooth Low Energy advertisement is broadcast, containing a service UUID of 0xfd6f, and a value with a 16 byte roling proximity identifier, and 4 bytes of versioning and signal strength. See the <a href="https://github.com/JanMisker/GAEN-Scanner">repository</a> for the code, it's all in index.html :)</p> 
+<p><strong>Note:</strong> You must be using Chrome 79+ with the chrome://flags/#enable-experimental-web-platform-features flag enabled to try this out.</p>
 <button onclick="startScan()" id="scanButton">Start scanning</button>
 <table id="output">
 <thead><tr><th>deviceId</th><th>discovered proximity IDs</th></thead>
